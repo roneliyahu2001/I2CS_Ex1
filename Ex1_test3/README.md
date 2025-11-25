@@ -100,3 +100,4 @@ Additional tests I added:
 
 - Polynomials are compared using an EPS value (`Ex1.EPS`) to allow small floating point differences.
 - The implementation focuses on clear and simple code, written in the style of a first–semester student.# I2CS_Ex1
+![תמונה 25 11 2025 ב-21 03](https://github.com/user-attachments/assets/f37d26d3-c691-4217-a206-227e3098f103)
