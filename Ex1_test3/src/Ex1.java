@@ -72,22 +72,24 @@ public class Ex1 {
      * @return an array of doubles representing the coefficients of the polynom.
      * <p>
      *
-    check that both input arrays are valid
-    check that the arrays have the same number of points
-    check that the number of points is between 1 and 3
-    handle the case of one point (return constant polynomial)
-    handle the case of two points (compute line passing through the points)
-    compute the slope using the two points
-    compute the intercept using one of the points
-    handle the case of three points (compute quadratic polynomial)
-    compute differences between x values
-    compute differences between y values
-    compute sums needed for the quadratic formulas
-    compute the coefficient a of the quadratic polynomial
-    compute the coefficient b of the quadratic polynomial
-    compute the constant term c of the quadratic polynomial
-    return the polynomial coefficients in an array
-     */
+    /**
+ * This function receives 1–3 points on the X-Y plane and returns
+ * the coefficients of the polynomial that goes through these points.
+ *
+ * Cases:
+ * 1 point  -> returns a constant function y = c
+ * 2 points -> returns a linear function y = ax + b
+ * 3 points -> returns a quadratic function y = Ax^2 + Bx + C
+ *
+ * The function builds the polynomial by calculating the correct
+ * coefficients using basic algebra. For 3 points, it uses the general
+ * formula for a parabola that passes through all three points.
+ *
+ * The returned array contains the coefficients in the order:
+ * [C, B, A]  (constant, linear, quadratic)
+ *
+ * If the input is invalid, the function returns null.
+ */
     public static double[] PolynomFromPoints(double[] xx, double[] yy) {
         if (xx == null || yy == null) return null;
         if (xx.length != yy.length) return null;
@@ -109,27 +111,28 @@ public class Ex1 {
         }
 
         if (xx.length == 3) {
+           double[] ans = new double[3];
+            ans = new double[3];
+
             double x1 = xx[0], y1 = yy[0];
             double x2 = xx[1], y2 = yy[1];
             double x3 = xx[2], y3 = yy[2];
 
-            double dx21 = x2 - x1;
-            double dx31 = x3 - x1;
+            double denom = (x1 - x2) * (x1 - x3) * (x2 - x3);
 
-            double dy21 = y2 - y1;
-            double dy31 = y3 - y1;
+            double A = (x3 * (y2 - y1) + x2 * (y1 - y3) + x1 * (y3 - y2)) / denom;
+            double B = (x3 * x3 * (y1 - y2) +
+                    x2 * x2 * (y3 - y1) +
+                    x1 * x1 * (y2 - y3)) / denom;
+            double C = (x2 * x3 * (x2 - x3) * y1 +
+                    x3 * x1 * (x3 - x1) * y2 +
+                    x1 * x2 * (x1 - x2) * y3) / denom;
 
-            double sum21 = x2 + x1;
-            double sum31 = x3 + x1;
+            ans[2] = A;
+            ans[1] = B;
+            ans[0] = C;
 
-            double a = (dy21 * dx31 - dy31 * dx21) /
-                    (dx21 * sum21 * dx31 - dx31 * sum31 * dx21);
-
-            double b = (dy21 - a * dx21 * sum21) / dx21;
-
-            double c = y1 - a * x1 * x1 - b * x1;
-
-            return new double[]{a, b, c};
+            return ans;
         }
 
         return null;
@@ -204,23 +207,24 @@ public class Ex1 {
 
             for (int i = poly.length - 1; i >= 0; i--) {
                 double c = poly[i];
-                if (c == 0) continue;
+                if (poly[i] != 0) {
 
-                if (!first) {
-                    if (c > 0) ans += " +";
-                    else ans += " ";
+                    if (!first) {
+                        if (c > 0) ans += " +";
+                        else ans += " ";
+                    }
+
+                    ans += c;
+
+                    if (i > 1) ans += "x^" + i;
+                    else if (i == 1) ans += "x";
+
+                    first = false;
                 }
 
-                ans += c;
-
-                if (i > 1) ans += "x^" + i;
-                else if (i == 1) ans += "x";
-
-                first = false;
+                if (ans.equals("")) ans = "0";
             }
-
-            if (ans.equals("")) ans = "0";
-		}
+        }
 		return ans;
 	}
 	/**
